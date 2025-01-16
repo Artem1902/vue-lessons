@@ -71,6 +71,9 @@
 <script>
     const {createApp} = Vue
 
+    const dollarToHrnRate = 40
+    const euroToHrnRate = 42
+
     createApp({
         data() {
             return {
@@ -78,8 +81,6 @@
                 addMoney: 0,
                 withdrawMoney: 0,
                 servInterest: 0,
-                dollarToHrnRate: 40,
-                euroToHrnRate: 42,
                 servInterestRate: 3,
                 totalColor: 'black',
                 dollarColor: 'black',
@@ -106,14 +107,14 @@
         },
         computed: {
             dollarAmount() {
-                const res = (this.totalMoney / this.dollarToHrnRate).toFixed(2);
+                const res = (this.totalMoney / dollarToHrnRate).toFixed(2);
                 if (res < 100) {
                     this.dollarColor = 'red'
                 } else this.dollarColor = 'green'
                 return res
             },
             euroAmount() {
-                const res = (this.totalMoney / this.euroToHrnRate).toFixed(2);
+                const res = (this.totalMoney / euroToHrnRate).toFixed(2);
                 if (res < 100) {
                     this.euroColor = 'red'
                 } else this.euroColor = 'green'

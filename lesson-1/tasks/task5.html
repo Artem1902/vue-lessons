@@ -40,26 +40,27 @@
 <script>
     const {createApp} = Vue
 
+    const users = [
+        {login: "user1", password: "password1"},
+        {login: "user2", password: "password2"},
+        {login: "admin", password: "admin123"},
+        {login: "guest", password: "guest123"},
+        {login: "test", password: "test123"},
+        {login: "login1", password: "pass1234"},
+        {
+            login: "user123",
+            password: "secure123"
+        },
+        {login: "demo", password: "demo123"},
+        {login: "root", password: "rootpass"},
+        {
+            login: "simple",
+            password: "simplepass"
+        }]
+
     createApp({
         data() {
             return {
-                users: [
-                    {login: "user1", password: "password1"},
-                    {login: "user2", password: "password2"},
-                    {login: "admin", password: "admin123"},
-                    {login: "guest", password: "guest123"},
-                    {login: "test", password: "test123"},
-                    {login: "login1", password: "pass1234"},
-                    {
-                        login: "user123",
-                        password: "secure123"
-                    },
-                    {login: "demo", password: "demo123"},
-                    {login: "root", password: "rootpass"},
-                    {
-                        login: "simple",
-                        password: "simplepass"
-                    }],
                 enteredLogin: "",
                 enteredPassword: "",
             }
@@ -67,7 +68,7 @@
         methods: {
             onSignIn() {
                 if (this.enteredLogin !== '' && this.enteredPassword !== null) {
-                    const isAuth = this.users.some
+                    const isAuth = users.some
                     (user => user.login === this.enteredLogin && user.password === this.enteredPassword);
                     if (isAuth) {
                         alert('You are logged in!')
