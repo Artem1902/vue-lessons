@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../../favicon-32x32.png"
+          type="image/x-icon">
+    <title>Task 4</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+
+<body>
+<h1>Task #4</h1>
+<h4><a href="../index.html">Back</a></h4>
+<h3>
+    Задача 4. “Рахунок у банку”
+    Вимоги:
+    1) Спочатку сума дорівнює 0грн. Змінити суму у гривнях
+    можна або зарахуванням на рахунок, або зняттям.
+    2) Сума автоматично переводиться у долари та євро
+    (фіксований курс задається у data).
+    3) можливість зарахувати суму (контролювати, щоб не була
+    від’ємною)
+    4) можливість зняти (щоб не можна зняти більше ніж є на
+    рахунку)
+    5) при виконанні зняття і зарахування коштів
+    вираховувати 3% від суми (відображати кількість
+    відсотків автоматично)
+
+    При зміні суми :
+    - якщо було зняття, то суму відоражати червоним
+    - якщо було зарахування, то суму відображати зеленим
+    Якщо сума валюти менша за 100 то відображати червоним
+    кольором, інакше - зеленим
+</h3>
+<hr>
+<div id="app">
+    <p :style="{color: totalColor}">Total account balance:
+        {{totalMoney}} HRN.</p>
+    <label>
+        Put money on the account:
+        <input type="number"
+               v-model.number="addMoney">
+    </label>
+    <button @click="onAddMoney">Add money
+    </button>
+    <br>
+    <label>
+        Withdraw money from the account:
+        <input type="number"
+               v-model.number="withdrawMoney">
+    </label>
+    <button @click="onWithdrawMoney">Withdraw money
+    </button>
+    <p>Service interest - {{servInterestRate}}%: {{servInterest}}
+        HRN.</p>
+    <hr>
+    <div>
+        <p :style="{color: dollarColor}">
+            Amount in dollars USA: $
+            <strong>{{dollarAmount}}</strong>
+        </p>
+        <p :style="{color: euroColor}">
+            Amount in Euro: €
+            <strong>{{euroAmount}}</strong>
+        </p>
+    </div>
+</div>
+<script>
+    const {createApp} = Vue
+
+    createApp({
+        data() {
+            return {
+                totalMoney: 0,
+                addMoney: 0,
+                withdrawMoney: 0,
+                servInterest: 0,
+                dollarToHrnRate: 40,
+                euroToHrnRate: 42,
+                servInterestRate: 3,
+                totalColor: 'black',
+                dollarColor: 'black',
+                euroColor: 'black',
+            }
+        },
+        methods: {
+            onAddMoney() {
+                if (this.addMoney > 0) {
+                    this.servInterest = parseFloat((this.addMoney / 100 * this.servInterestRate).toFixed(2));
+                    this.totalMoney = parseFloat((this.totalMoney + this.addMoney - this.servInterest).toFixed(2));
+                    this.totalColor = 'green'
+                }
+                this.addMoney = 0;
+            },
+            onWithdrawMoney() {
+                if (this.withdrawMoney > 0 && this.totalMoney > this.withdrawMoney) {
+                    this.servInterest = parseFloat((this.withdrawMoney / 100 * this.servInterestRate).toFixed(2));
+                    this.totalMoney = parseFloat((this.totalMoney - this.withdrawMoney - this.servInterest).toFixed(2));
+                    this.totalColor = 'red'
+                }
+                this.withdrawMoney = 0;
+            }
+        },
+        computed: {
+            dollarAmount() {
+                const res = (this.totalMoney / this.dollarToHrnRate).toFixed(2);
+                if (res < 100) {
+                    this.dollarColor = 'red'
+                } else this.dollarColor = 'green'
+                return res
+            },
+            euroAmount() {
+                const res = (this.totalMoney / this.euroToHrnRate).toFixed(2);
+                if (res < 100) {
+                    this.euroColor = 'red'
+                } else this.euroColor = 'green'
+                return res
+            }
+        }
+    }).mount('#app')
+</script>
+</body>
+
+</html>
