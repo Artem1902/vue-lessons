@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../../favicon-32x32.png"
+          type="image/x-icon">
+    <title>Task 1</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        .errorIvan {
+            color: blue;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+<h1>Task #1</h1>
+<h4><a href="../index.html">Back</a></h4>
+<h3>
+    Задача 1. Вводимо логіна і пароль. Якщо логін вірний
+    відображаємо смайл. Якщо ні, то:
+    1) якщо логін = Іван – колір повідомлення про помилку
+    синій
+    2) якщо хтось інший, то колір повідомлення червоний
+</h3>
+<hr>
+<div id="app">
+    <label>
+        Login:
+        <input type="text" v-model.trim="enteredLogin"/>
+    </label>
+    <br>
+    <label>
+        Password:
+        <input type="password"
+               v-model.trim="enteredPassword"/>
+    </label>
+    <br>
+    <button :disabled='!isCredentialsEntered'
+            @click="onSignIn">Go
+    </button>
+    <hr>
+    <div v-show="isMessageShown" :class="errorColor">
+        {{textMessage}}
+    </div>
+</div>
+<script>
+    const {createApp} = Vue
+
+    const users = [
+        {login: "user1", password: "password1"},
+        {login: "user2", password: "password2"},
+        {login: "admin", password: "admin123"},
+        {login: "guest", password: "guest123"},
+        {login: "test", password: "test123"},
+        {login: "login1", password: "pass1234"},
+        {
+            login: "user123",
+            password: "secure123"
+        },
+        {login: "demo", password: "demo123"},
+        {login: "root", password: "rootpass"},
+        {
+            login: "simple",
+            password: "simplepass"
+        }]
+
+    createApp({
+        data() {
+            return {
+                enteredLogin: "",
+                enteredPassword: "",
+                isMessageShown: false,
+                isAuth: null,
+            }
+        },
+        computed: {
+            isCredentialsEntered() {
+                return this.enteredLogin !== '' && this.enteredPassword !== ''
+            },
+            textMessage() {
+                return this.isAuth ? ':-)' : 'You are not logged in!'
+            },
+            errorColor() {
+                let currentClassError = ''
+                if (!this.isAuth) {
+                    if (this.enteredLogin === 'Ivan') {
+                        currentClassError = 'errorIvan'
+                    } else currentClassError = 'error'
+                }
+                return currentClassError
+            }
+        },
+        methods: {
+            onSignIn() {
+                this.isAuth = users.some
+                (user => user.login === this.enteredLogin && user.password === this.enteredPassword)
+                this.isMessageShown = true
+            }
+        }
+    }).mount('#app')
+</script>
+</body>
+
+</html>

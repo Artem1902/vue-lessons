@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../../favicon-32x32.png"
+          type="image/x-icon">
+    <title>Task 4</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        .errorIvan {
+            color: blue;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+<h1>Task #4</h1>
+<h4><a href="../index.html">Back</a></h4>
+<h3>
+    4. Вивести список як маркований список з елементами у
+    форматі (name: salary)
+</h3>
+<hr>
+<div id="app">
+    <ol>
+        <li v-for='worker in workersList' :key='worker.id'>
+            {{worker.name}}: {{worker.salary}}
+        </li>
+    </ol>
+</div>
+<script>
+    const {createApp} = Vue
+
+    const workers = [
+        {id: 1, name: 'Ivanov', salary: 10000},
+        {id: 2, name: 'Petrov', salary: 20000},
+        {id: 3, name: 'Sidorov', salary: 30000},
+    ]
+
+    createApp({
+        computed: {
+            workersList() {
+                return workers
+            }
+        },
+    }).mount('#app')
+</script>
+</body>
+
+</html>

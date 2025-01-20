@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../../favicon-32x32.png"
+          type="image/x-icon">
+    <title>Task 3</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        .card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card img {
+            width: 250px;
+        }
+
+        .correctAnswer {
+            border: 2px solid green;
+        }
+
+        .wrongAnswer {
+            border: 2px solid red;
+        }
+    </style>
+</head>
+
+<body>
+<h1>Task #3</h1>
+<h4><a href="../index.html">Back</a></h4>
+<h3>
+    Задача 3. Елемент тренажера англійської. Виводимо
+    зображення елемента і слово. Користувач вводить
+    відповідь. Якщо вірно – відтворюємо фразу «Добре.
+    Молодець!» (і додаємо зелену рамку до елемента), якщо ні
+    - то відтворюємо фразу «Невірно, спробуйте ще раз» (і
+    додаємо червону рамку).
+</h3>
+<hr>
+<div id="app">
+    <h2>Перекладіть на англійську мову</h2>
+    <div class="card">
+        <img :src="randomItemList.img"
+             :alt="randomItemList.ukrainian">
+        <p>Як перекладається на англійську мову
+            <strong>{{randomItemList.ukrainian}}</strong>
+        </p>
+    </div>
+    <label>
+        Відповідь:
+        <input type="text"
+               v-model.trim.lazy="enteredAnswered">
+    </label>
+    <button @click="onSubmit">Ok
+    </button>
+    <br>
+    <br>
+    <div v-show="showMessage">
+        <span :class="colorAnswered">{{message}}</span>
+        <br>
+        <br>
+        <button @click="onNext">Наступне слово</button>
+    </div>
+</div>
+<script>
+    const {createApp} = Vue
+
+    const animalsList = [
+        {
+            id: 1,
+            img: '../assets/animals/cat.jpg',
+            english: 'cat',
+            ukrainian: 'кіт'
+        },
+        {
+            id: 2,
+            img: '../assets/animals/dog.jpg',
+            english: 'dog',
+            ukrainian: 'собака'
+        },
+        {
+            id: 3,
+            img: '../assets/animals/frog.jpg',
+            english: 'frog',
+            ukrainian: 'жаба'
+        },
+        {
+            id: 4,
+            img: '../assets/animals/owl.jpg',
+            english: 'owl',
+            ukrainian: 'сова'
+        },
+        {
+            id: 5,
+            img: '../assets/animals/raccoon.jpg',
+            english: 'raccoon',
+            ukrainian: 'єнот'
+        }
+    ]
+
+    createApp({
+        data() {
+            return {
+                enteredAnswered: '',
+                message: '',
+                showMessage: false,
+                randomItemList: {
+                    id: 1,
+                    img: '../assets/animals/cat.jpg',
+                    english: 'cat',
+                    ukrainian: 'кіт'
+                }
+            }
+        },
+        computed: {
+            checkAnswered() {
+                return this.randomItemList.english === this.enteredAnswered.toLowerCase()
+
+            },
+            colorAnswered() {
+                let currentClass = ''
+                if (this.checkAnswered) {
+                    currentClass = 'correctAnswer'
+                } else currentClass = 'wrongAnswer'
+                return currentClass
+            },
+        },
+        methods: {
+            onSubmit() {
+                if (this.enteredAnswered) {
+                    if (this.checkAnswered) {
+                        this.message = 'Добре. Молодець!'
+                        this.showMessage = true
+                    } else {
+                        this.message = 'Невірно, спробуйте ще раз'
+                        this.enteredAnswered = ''
+                        this.showMessage = true
+                    }
+                    return
+                }
+
+            },
+            onNext() {
+                this.enteredAnswered = ''
+                const randomIndex = (Math.floor(Math.random() * animalsList.length))
+                this.randomItemList = animalsList[randomIndex]
+                this.showMessage = false
+            }
+        }
+    }).mount('#app')
+</script>
+</body>
+
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../../favicon-32x32.png"
+          type="image/x-icon">
+    <title>Task 2</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        .main {
+            min-height: 300px;
+        }
+
+        .backgroundBusiness {
+            background-image: url("../assets/first-class-airplace_BIZVSFIRST1222-a029d8f9f4834401a2872157e39090a7.webp");
+            background-repeat: no-repeat;
+        }
+
+        .backgroundEconomy {
+            background-image: url("../assets/img.png");
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+
+<body>
+<h1>Task #2</h1>
+<h4><a href="../index.html">Back</a></h4>
+<h3>
+    Задача 2. З випадаючого списку вибираємо клас квитка у
+    літаку. Якщо
+    1) бізнес - виводимо елементи для вибору газети та
+    коньяку (якщо вибрано коньяк, то запропонувати закуску
+    (так/ні)), на фоні зображення бізнес кают
+    2) економ – виводимо елементи для вибору типу пива і
+    чипсів, на фоні хмарки.
+</h3>
+<hr>
+<div id="app">
+    <div class="main" :class="backgroundImage">
+        <label for="ticket-type">
+            Choose a ticket type:
+        </label>
+        <select id="ticket-type" v-model="ticketType">
+            <option disabled value="">Please choose an
+                option
+            </option>
+            <option value="business">Business</option>
+            <option value="economy">Economy</option>
+        </select>
+        <br>
+        <br>
+        <div v-show='showBusinessOptions'>
+            <label for="newspaper-type">
+                Choose a newspaper:
+            </label>
+            <select id="newspaper-type"
+                    v-model="newspaperType">
+                <option disabled value="">Please choose an
+                    option
+                </option>
+                <option value="economist">The Economist
+                </option>
+                <option value="newYork">The New York Times
+                </option>
+            </select>
+            <br>
+            <br>
+            <label for="whiskey-type">
+                Choose a whiskey:
+            </label>
+            <select id="whiskey-type" v-model="whiskeyType">
+                <option disabled value="">Please choose an
+                    option
+                </option>
+                <option value="jack">Jack Daniel's</option>
+                <option value="jameson">Jameson Irish
+                    Whiskey
+                </option>
+            </select>
+            <template v-if="showSnacksOffer">
+                <br>
+                <br>
+                <label for="snack-type">
+                    Do you want a snack?:
+                </label>
+                <select id="snack-type" v-model="snackType">
+                    <option disabled value="">Please choose
+                        an
+                        option
+                    </option>
+                    <option value="true">Yes, of course!
+                    </option>
+                    <option value="false">No, thanks
+                    </option>
+                </select>
+            </template>
+        </div>
+        <div v-show="showEconomyOptions">
+            <label for="beer-type">
+                Choose a beer:
+            </label>
+            <select id="beer-type" v-model="beerType">
+                <option disabled value="">Please choose an
+                    option
+                </option>
+                <option value="pilsner:">Pilsner</option>
+                <option value="miller">Miller
+                </option>
+                <option value="stella">Stella Artois
+                </option>
+            </select>
+            <template v-if="showChipsOffer">
+                <br>
+                <br>
+                <label for="chips-type">
+                    Choose a chips:
+                </label>
+                <select id="chips-type" v-model="chipsType">
+                    <option disabled value="">Please choose
+                        an
+                        option
+                    </option>
+                    <option value="lays">Lay's</option>
+                    <option value="pringles">Pringles
+                    </option>
+                </select>
+            </template>
+        </div>
+    </div>
+</div>
+<script>
+    const {createApp} = Vue
+
+    createApp({
+        data() {
+            return {
+                ticketType: '',
+                newspaperType: '',
+                whiskeyType: '',
+                isSnack: false,
+                beerType: '',
+                chipsType: ''
+            }
+        },
+        computed: {
+            showBusinessOptions() {
+                return this.ticketType === 'business'
+            },
+            showSnacksOffer() {
+                return this.whiskeyType
+            },
+            showEconomyOptions() {
+                return this.ticketType === 'economy'
+            },
+            showChipsOffer() {
+                return this.beerType
+            },
+            backgroundImage() {
+                let currentBackgroundImage = ''
+                if (this.showBusinessOptions) {
+                    currentBackgroundImage = 'backgroundBusiness'
+                } else if (this.showEconomyOptions) {
+                    currentBackgroundImage = 'backgroundEconomy'
+                }
+                return currentBackgroundImage
+            }
+        },
+        methods: {}
+    }).mount('#app')
+</script>
+</body>
+
+</html>

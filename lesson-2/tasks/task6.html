@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../../favicon-32x32.png"
+          type="image/x-icon">
+    <title>Task 6</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        .table {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            column-gap: 30px;
+        }
+
+        .column {
+            border: 1px solid black;
+        }
+
+        .subTitle {
+            text-align: center;
+        }
+
+        .list {
+            list-style-type: none;
+            padding: 5px;
+        }
+
+        .listItem {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            list-style-type: none;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+<h1>Task #6</h1>
+<h4><a href="../index.html">Back</a></h4>
+<h3>
+    Задача 6. Задача. На кухню поступають замовлення.
+    Спочатку ми додаємо їх у список “Очікують на виконання”,
+    якщо повар береться робити — замовлення переходить у
+    список “Виконуються”, якщо замовлення виконано —
+    переходить у список “Готові до виносу”. Якщо натиснути
+    на “Подано” - страва зникає з таблиці
+</h3>
+<hr>
+<div id="app">
+    <label>
+        Нова замовлена страва: <input type="text"
+                                      v-model.trim="enteredMeal">
+        <button :disabled='disableAddButton'
+                @click='addToWaitingList'>Додати
+        </button>
+    </label>
+    <div class="table">
+        <div class="column">
+            <h3 class="subTitle">Очікують на виконання</h3>
+            <ol class="list">
+                <li class="listItem"
+                    v-for="item in waitingList"
+                    :key="item.id">
+                    <span>{{item.title}}</span>
+                    <button @click='addToProcessingList(item.id)'>
+                        Готувати
+                    </button>
+                </li>
+            </ol>
+        </div>
+        <div class="column">
+            <h3 class="subTitle">Виконуються</h3>
+            <ol class="list">
+                <li class="listItem"
+                    v-for="item in processingList"
+                    key="item.id">
+                    <span>{{item.title}}</span>
+                    <button @click='addToCompletedList(item.id)'>
+                        Приготовлено
+                    </button>
+                </li>
+            </ol>
+        </div>
+        <div class="column">
+            <h3 class="subTitle">Готові до виносу</h3>
+            <ol class="list">
+                <li class="listItem"
+                    v-for="item in completedList"
+                    :key="item.id">
+                    <span>{{item.title}}</span>
+                    <button @click='removeFromCompletedList(item.id)'>
+                        Подано
+                    </button>
+                </li>
+            </ol>
+        </div>
+        <div class="main"></div>
+    </div>
+</div>
+<script>
+    const {createApp} = Vue
+
+
+    createApp({
+        data() {
+            return {
+                enteredMeal: null,
+                waitingList: [],
+                processingList: [],
+                completedList: []
+            }
+        },
+        computed: {
+            disableAddButton() {
+                return !this.enteredMeal
+            }
+        },
+        methods: {
+            addToWaitingList() {
+                const newMeal = {
+                    id: new Date().getTime(),
+                    title: this.enteredMeal,
+                }
+                this.waitingList.push(newMeal)
+                this.enteredMeal = ''
+            },
+            addToProcessingList(mealId) {
+                const chosenMeal = this.waitingList.find(item => item.id === mealId)
+                this.processingList.push(chosenMeal)
+                this.waitingList = this.waitingList.filter(item => item.id !== mealId)
+            },
+            addToCompletedList(mealId) {
+                const chosenMeal = this.processingList.find(item => item.id === mealId)
+                this.completedList.push(chosenMeal)
+                this.processingList = this.processingList.filter(item => item.id !== mealId)
+            },
+            removeFromCompletedList(mealId) {
+                this.completedList = this.completedList.filter(item => item.id !== mealId)
+            }
+        }
+    }).mount('#app')
+</script>
+</body>
+
+</html>

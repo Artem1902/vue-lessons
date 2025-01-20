@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../../favicon-32x32.png"
+          type="image/x-icon">
+    <title>Task 5</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        .main {
+            display: flex;
+            flex-direction: column;
+            list-style-type: none;
+            gap: 30px;
+        }
+
+        .list-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .subtitleList {
+            display: flex;
+            flex-direction: row;
+            column-gap: 20px;
+            flex-wrap: wrap;
+            list-style-type: none;
+        }
+    </style>
+</head>
+
+<body>
+<h1>Task #5</h1>
+<h4><a href="../index.html">Back</a></h4>
+<h3>
+    Задача 5. Самостійно сформуйте масив даних та виведіть
+    фрагмент на зразок поданого (дані не обов’язково повинні
+    співпадати)
+</h3>
+<hr>
+<div id="app">
+    <div>
+        <ul class="main">
+            <li class="list-item"
+                v-for=" dataItem in databaseList"
+                :key="dataItem.id">
+                <a :href="dataItem.link" class="header">
+                    <div>
+                        <img :src="dataItem.img"
+                             :alt="dataItem.title">
+                    </div>
+                    <div>
+                        <h2>{{dataItem.title}}</h2>
+                        <p>{{dataItem.link}}</p>
+                    </div>
+                </a>
+
+                <h3>{{dataItem.headerTitle}}</h3>
+                <p>{{dataItem.description}}</p>
+                <ul class="subtitleList" v-show="dataItem.subtitleList.length>0">
+                    <li v-for="subtitleItem in dataItem.subtitleList">
+                        <a :href="subtitleItem.subLink">
+                            {{subtitleItem.name}}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<script>
+    const {createApp} = Vue
+
+    const dataBase = [
+        {
+            id: 1,
+            img: '../assets/logo/wiki.png',
+            title: 'Wikipedia',
+            link: 'https://en.wikipedia.org/wiki/Vue.js',
+            headerTitle: 'Vue.js',
+            description: 'Vue.js is an open-source model–view–viewmodel front end JavaScript framework for building user interfaces and single-page applications.',
+            subtitleList: [
+                {
+                    id: 's1',
+                    name: 'Vue Introduction',
+                    subLink: 'https://www.w3schools.com/vue/vue_intro.php'
+
+                },
+                {
+                    id: 's2',
+                    name: 'Vue Directives',
+                    subLink: 'https://www.w3schools.com/vue/vue_directives.php'
+
+                },
+                {
+                    id: 's3',
+                    name: 'Vue Examples',
+                    subLink: 'https://www.w3schools.com/vue/vue_examples.php'
+
+                },
+                {
+                    id: 's4',
+                    name: 'Vue Events',
+                    subLink: 'https://www.w3schools.com/vue/vue_events.php'
+
+                },
+                {
+                    id: 's5',
+                    name: 'Vue Forms',
+                    subLink: 'https://www.w3schools.com/vue/vue_forms.php'
+
+                },
+            ]
+        },
+        {
+            id: 2,
+            img: '../assets/logo/MDN.png',
+            title: 'MDN Web Docs',
+            link: 'https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Frameworks_libraries/Vue_getting_started',
+            headerTitle: 'Getting started with Vue - Learn web development | MDN',
+            description: '19 дек. 2024 г. — In this article we\'ll look at a little bit of Vue background, learn how to install it and create a new project, study the high-level structure of the whole',
+            subtitleList: []
+        },
+        {
+            id: 3,
+            img: '../assets/logo/NPM.png',
+            title: 'NPM',
+            link: 'https://www.npmjs.com/package/vue',
+            headerTitle: 'vue',
+            description: '15 нояб. 2024 г. — The progressive JavaScript framework for building modern web UI.. Latest version: 3.5.13, last published: 2 months ago. Start using vue in ...',
+            subtitleList: []
+        }
+
+    ]
+
+    createApp({
+        computed: {
+            databaseList() {
+                return dataBase
+            },
+        },
+    }).mount('#app')
+</script>
+</body>
+
+</html>
