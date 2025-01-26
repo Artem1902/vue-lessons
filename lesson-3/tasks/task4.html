@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../../favicon-32x32.png"
+          type="image/x-icon">
+    <title>Task 4</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        .container {
+            margin-top: 50px;
+            display: flex;
+        }
+
+        .cell {
+            width: 30px;
+            height: 30px;
+            border: 1px solid black;
+        }
+
+        .closed {
+            background-color: grey;
+        }
+
+        .hasMine {
+            background-color: red;
+        }
+
+        .free {
+            background-color: green;
+        }
+    </style>
+</head>
+
+<body>
+<h1>Task #4</h1>
+<h4><a href="../index.html">Back</a></h4>
+<h3>
+    Задача 4. Однорядковий сапер. Однорядкова таблиця, до
+    клітинок якої додано інформацію про наявність міни
+    (використати атрибути). Спочатку клітинки сірі. При
+    натисненні на клітинку аналізується чи є там міна і тоді
+    колір стає червоним, якщо немає – зеленим. Додати
+    можливість відкриття усіх сусідніх незамінованих
+    клітинок при відкритті незамінованої клітинки.
+</h3>
+<hr>
+<div id="app">
+    <label>
+        Quantity cells: <input type="number"
+                               v-model.number="quantityCells">
+    </label>
+    <button @click=createGameField>Create game field
+    </button>
+    <div class="container">
+        <div v-for="(cell, index ) in gameField"
+             class="cell"
+             :class='getColorClass(cell)'
+             @click='onClickCell(index)'>
+        </div>
+    </div>
+</div>
+<script>
+    const {createApp} = Vue
+
+    createApp({
+        data() {
+            return {
+                quantityCells: null,
+                gameField: []
+            }
+        },
+        methods: {
+            createGameField() {
+                for (let i = 0; i < this.quantityCells; i++) {
+                    const cell = {
+                        hasMine: Math.random() < 0.5,
+                        isClosed: true
+                    }
+                    this.gameField.push(cell)
+                }
+            },
+            onClickCell(index) {
+                this.gameField[index].isClosed = false
+
+                if (!this.gameField[index].hasMine) {
+                    for (let i = index - 1; i >= 0 && !this.gameField[i].hasMine; i--) {
+                        this.gameField[i].isClosed = false
+                    }
+
+                    for (let i = index + 1; i < this.gameField.length && !this.gameField[i].hasMine; i++) {
+                        this.gameField[i].isClosed = false
+                    }
+                }
+            },
+            getColorClass(cell) {
+                let currentClass
+                if (cell.isClosed) {
+                    currentClass = 'closed'
+                } else {
+                    currentClass = cell.hasMine ? 'hasMine' : 'free'
+                }
+                return currentClass
+            }
+        }
+    }).mount('#app')
+</script>
+</body>
+
+</html>

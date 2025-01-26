@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../../favicon-32x32.png"
+          type="image/x-icon">
+    <title>Task 9</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        .container {
+            display: flex;
+        }
+
+        .listItem {
+            width: 100px;
+            height: 50px;
+            border: 1px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .blue {
+            border: 1px solid blue;
+        }
+
+        .red {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+<h1>Task #9</h1>
+<h4><a href="../index.html">Back</a></h4>
+<h3>
+    Задача 9. Перекладач. Користувачу виводять змішані
+    картки з словами на англійській і українській мові.
+    Користувач поступово клікає на картки (виділяємо синьою
+    рамкою). Якщо знайдено правильні пари карток, що
+    відповідають одному слову, то видаляємо ці картки.
+    Інакше - виділяємо червоною рамкою і через секунду
+    забираємо рамку.
+</h3>
+<hr>
+<div id="app">
+    <h1>Знайдіть пари слів</h1>
+    <div v-if="isAvailableInLists" class="container">
+        <ol>
+            <li v-for="animal in animalsListEng"
+                :key='animal.id' class="listItem"
+                :class="{'blue': animal.isChosen, 'red': animal.isIncorrect}"
+                @click="onClickAnimalEng(animal.id)">
+                {{animal.english}}
+            </li>
+        </ol>
+        <ol>
+            <li v-for="animal in animalsListUkr"
+                :key='animal.id' class="listItem"
+                :class="{'blue': animal.isChosen, 'red': animal.isIncorrect}"
+                @click="onClickAnimalUkr(animal.id)">
+                {{animal.ukrainian}}
+            </li>
+        </ol>
+    </div>
+    <p v-else>Ви вгадали всі слова!</p>
+</div>
+<script>
+    const {createApp} = Vue
+
+    const animals = [
+        {
+            id: 1,
+            english: 'cat',
+            ukrainian: 'кіт',
+            isChosen: false,
+            isIncorrect: false,
+        },
+        {
+            id: 2,
+            english: 'dog',
+            ukrainian: 'собака',
+            isChosen: false,
+            isIncorrect: false,
+        },
+        {
+            id: 3,
+            english: 'frog',
+            ukrainian: 'жаба',
+            isChosen: false,
+            isIncorrect: false,
+        },
+        {
+            id: 4,
+            english: 'owl',
+            ukrainian: 'сова',
+            isChosen: false,
+            isIncorrect: false,
+        },
+        {
+            id: 5,
+            english: 'raccoon',
+            ukrainian: 'єнот',
+            isChosen: false,
+            isIncorrect: false,
+        }
+    ]
+
+    createApp({
+        data() {
+            return {
+                animalsListEng: [],
+                animalsListUkr: [],
+                selectedEng: null,
+                selectedUkr: null,
+            }
+        },
+        computed: {
+            checkResult() {
+                if (this.selectedEng && this.selectedUkr) {
+                    if (this.selectedEng.english === this.selectedUkr.english) {
+                        this.animalsListEng = this.animalsListEng.filter(animal => animal.id !== this.selectedEng.id)
+                        this.animalsListUkr = this.animalsListUkr.filter(animal => animal.id !== this.selectedUkr.id)
+                        this.selectedEng = null
+                        this.selectedUkr = null
+                    } else {
+                        this.selectedEng.isIncorrect = true
+                        this.selectedUkr.isIncorrect = true
+                        setTimeout(() => {
+                            this.selectedEng.isIncorrect = false
+                            this.selectedUkr.isIncorrect = false
+                            this.selectedEng.isChosen = false
+                            this.selectedUkr.isChosen = false
+                            this.selectedEng = null
+                            this.selectedUkr = null
+                        }, 1000)
+                    }
+                }
+            },
+            isAvailableInLists() {
+                return (this.animalsListEng.length > 0) && (this.animalsListEng.length > 0)
+            }
+        },
+        methods: {
+            onClickAnimalEng(animalId) {
+                if (this.selectedEng) {
+                    this.selectedEng.isChosen = false
+                    this.selectedEng.isIncorrect = false
+                }
+                this.selectedEng = this.animalsListEng.find(animal => animal.id === animalId);
+                this.selectedEng.isChosen = true;
+                this.checkResult()
+            },
+            onClickAnimalUkr(animalId) {
+                if (this.selectedUkr) {
+                    this.selectedUkr.isChosen = false
+                    this.selectedUkr.isIncorrect = false
+                }
+                this.selectedUkr = this.animalsListUkr.find(animal => animal.id === animalId);
+                this.selectedUkr.isChosen = true;
+                this.checkResult()
+            }
+        },
+        mounted() {
+            this.animalsListEng = JSON.parse(JSON.stringify(animals)).sort(() => Math.random() - 0.5)
+            this.animalsListUkr = JSON.parse(JSON.stringify(animals)).sort(() => Math.random() - 0.5)
+        }
+
+    }).mount('#app')
+</script>
+</body>
+
+</html>

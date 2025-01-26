@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../../favicon-32x32.png"
+          type="image/x-icon">
+    <title>Task 13</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+
+<body>
+<h1>Task #13</h1>
+<h4><a href="../index.html">Back</a></h4>
+<h3>
+    Задача 13. Тренажер додавання. Вводимо загальну
+    кількість прикладів і натискаємо на кнопку «Старт».
+    Після запуску (натисканні на кнопку «Старт») кожні 10
+    секунд (10 секунд між завданнями) користувачу задають
+    випадковий приклад з додавання двох цифр і робиться
+    перевірка. Формується список тих, які він відповів
+    правильно, і які він відповів неправильно. Загальна
+    кількість прикладів вводиться.
+</h3>
+<hr>
+<div id="app">
+    <label>
+        Введіть кількість прикладів
+        <input type="number"
+               v-model.number="numberExercise">
+    </label>
+    <button @click="start">Старт</button>
+    <br>
+    <br>
+    <div v-show="showQuestion">
+        <div>
+            Скільки буде {{firstNumber}} + {{secondNumber}}?
+            <label>
+                <br>
+                Відповідь (треба натиснути Enter!):
+                <input type="number"
+                       v-model.number.lazy="answer"
+                       ref="ans">
+            </label>
+        </div>
+        <div>
+            <h2>Правильні відповіді:</h2>
+            <div v-for="(el, index) in correctAnswer"
+                 :key='index'>
+                {{el.firstNumber}} + {{el.secondNumber}} =
+                {{el.answer}}
+            </div>
+        </div>
+        <div>
+            <h2>Не правильні відповіді:</h2>
+            <div v-for="(el, index) in inCorrectAnswer"
+                 :key='index'>
+                {{el.firstNumber}} + {{el.secondNumber}} =
+                {{el.answer}}
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const {createApp} = Vue
+
+    createApp({
+        data() {
+            return {
+                numberExercise: null,
+                firstNumber: null,
+                secondNumber: null,
+                answer: null,
+                correctAnswer: [],
+                inCorrectAnswer: [],
+                currentExercise: 0,
+                interval: null,
+                showQuestion: false,
+            }
+        },
+        computed: {
+            checkAnswer() {
+                return (this.firstNumber + this.secondNumber) === this.answer;
+            },
+        },
+        methods: {
+            start() {
+                if (!this.numberExercise || this.numberExercise <= 0) {
+                    alert('Введіть коректне значення!')
+                    return;
+                }
+                this.showQuestion = true;
+                this.currentExercise = 0;
+                this.correctAnswer = [];
+                this.inCorrectAnswer = [];
+                this.nextExercise()
+                this.interval = setInterval(() => {
+                    this.saveAnswer()
+                    this.nextExercise()
+                }, 10000)
+            },
+            nextExercise() {
+                if (this.currentExercise >= this.numberExercise) {
+                    clearInterval(this.interval);
+                    alert('Завершено!')
+                    this.numberExercise = null
+                    return;
+                }
+                this.answer = null
+                this.firstNumber = Math.floor(Math.random() * 10);
+                this.secondNumber = Math.floor(Math.random() * 10);
+
+                this.currentExercise++
+            },
+            saveAnswer() {
+                if (this.firstNumber !== null && this.secondNumber !== null) {
+                    const newAnswer = {
+                        firstNumber: this.firstNumber,
+                        secondNumber: this.secondNumber,
+                        answer: this.answer !== null ? this.answer : 'не введено',
+                    }
+                    if (this.checkAnswer) {
+                        this.correctAnswer.push(newAnswer)
+                    } else {
+                        this.inCorrectAnswer.push(newAnswer)
+                    }
+                }
+            }
+        }
+
+    }).mount('#app')
+</script>
+</body>
+
+</html>

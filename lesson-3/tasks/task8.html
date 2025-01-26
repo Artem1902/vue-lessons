@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../../favicon-32x32.png"
+          type="image/x-icon">
+    <title>Task 8</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+<h1>Task #8</h1>
+<h4><a href="../index.html">Back</a></h4>
+<h3>
+    Задача 8. Дано список автомобілів (марка, рік випуску,
+    ціна). Сформувати елементи для фільтрування з
+    використанням випадаючого списку (контент цих випадаючих
+    списків сформувати у залежності від переданого списку).
+</h3>
+<hr>
+<div id="app">
+    <label>
+        Brand: <select v-model="selectedBrand">
+        <option v-for="brand in brandsList"
+                :value="brand.value" :key='brand.value'>
+            {{brand.text}}
+        </option>
+    </select>
+    </label>
+    <label>
+        Year: <select v-model="selectedYear">
+        <option v-for="year in yearsList"
+                :value="year.value" :key='year.value'>
+            {{year.text}}
+        </option>
+    </select>
+    </label>
+    <div v-for="filteredCar in filteredCarsList"
+         :key="filteredCar.id">
+        {{filteredCar.brand}} - {{filteredCar.year}} -
+        {{filteredCar.price}}
+    </div>
+</div>
+<script>
+    const {createApp} = Vue
+
+    const cars = [
+        {
+            id: 1,
+            brand: 'Toyota',
+            year: 2020,
+            price: 20000,
+            owner: 'John Doe'
+        },
+        {
+            id: 2,
+            brand: 'Honda',
+            year: 2020,
+            price: 18000,
+            owner: 'Jane Smith',
+        },
+        {
+            id: 3,
+            brand: 'Ford',
+            year: 2018,
+            price: 15000,
+            owner: 'Alice Brown',
+        },
+        {
+            id: 4,
+            brand: 'Toyota',
+            year: 2020,
+            price: 21000,
+            owner: 'Michael Johnson',
+        },
+        {
+            id: 5,
+            brand: 'BMW',
+            year: 2019,
+            price: 30000,
+            owner: 'Chris Green'
+        },
+        {
+            id: 6,
+            brand: 'Honda',
+            year: 2021,
+            price: 17000,
+            owner: 'Tom Hanks'
+        },
+        {
+            id: 7,
+            brand: 'Ford',
+            year: 2018,
+            price: 16000,
+            owner: 'Emma White'
+        },
+        {
+            id: 8,
+            brand: 'Toyota',
+            year: 2021,
+            price: 22000,
+            owner: 'Sarah Black',
+        },
+        {
+            id: 9,
+            brand: 'BMW',
+            year: 2019,
+            price: 31000,
+            owner: 'Liam Blue'
+        },
+        {
+            id: 10,
+            brand: 'Honda',
+            year: 2020,
+            price: 19000,
+            owner: 'Olivia Pink',
+        },
+    ]
+    createApp({
+        data() {
+            return {
+                selectedBrand: null,
+                selectedYear: null,
+            }
+        },
+        computed: {
+            brandsList() {
+                const brandsItems = [
+                    {value: null, text: 'All cars brands'},
+                ]
+                Array.from(new Set(cars.map(car => car.brand))).forEach((brand) => {
+                    brandsItems.push({
+                        value: brand,
+                        text: brand
+                    })
+                })
+                return brandsItems.sort((a, b) => b.value - a.value)
+            },
+            yearsList() {
+                const yearsItems = [
+                    {value: null, text: 'All cars years'},
+                ]
+                Array.from(new Set(cars.map(car => car.year))).forEach((year) => {
+                    yearsItems.push({
+                        value: year,
+                        text: year
+                    })
+                })
+                return yearsItems.sort((a, b) => a.value - b.value)
+
+            },
+            filteredCarsList() {
+                return cars.filter(car =>
+                    (!this.selectedBrand || car.brand === this.selectedBrand) && (!this.selectedYear || car.year === this.selectedYear)
+                )
+            }
+        },
+        methods: {}
+    }).mount('#app')
+</script>
+</body>
+
+</html>

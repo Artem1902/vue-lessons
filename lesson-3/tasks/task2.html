@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../../favicon-32x32.png"
+          type="image/x-icon">
+    <title>Task 2</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        .white {
+            background-color: white;
+        }
+
+        .blue {
+            background-color: blue;
+        }
+
+        .green {
+            background-color: green;
+        }
+
+        .red {
+            background-color: red;
+        }
+    </style>
+</head>
+
+<body>
+<h1>Task #2</h1>
+<h4><a href="../index.html">Back</a></h4>
+<h3>
+    Задача 2. З клавіатури вводиться температура. Змінювати
+    колір фону у залежності від значення:
+    менше нуля – білий
+    від 0 до 10 – синій,
+    від 11 до 22 – зелений
+    вище 22 – червоний
+    Реалізувати з класами і стилями.
+</h3>
+<hr>
+<div id="app">
+    <label>
+        Temperature:
+        <input type="number" :class="backgroundClass"
+               v-model.number="temperature"/>
+    </label>
+</div>
+<script>
+    const {createApp} = Vue
+
+    createApp({
+        data() {
+            return {
+                temperature: null
+            }
+        },
+        computed: {
+            backgroundClass() {
+                let currentClass = null
+                if (this.temperature !== null) {
+                    if (this.temperature < 0) {
+                        currentClass = 'white'
+                    } else if (this.temperature >= 0 && this.temperature <= 10) {
+                        currentClass = 'blue'
+                    } else if (this.temperature >= 10 && this.temperature <= 22) {
+                        currentClass = 'green'
+                    } else {
+                        currentClass = 'red'
+                    }
+                }
+                return currentClass
+            }
+        }
+
+    }).mount('#app')
+</script>
+</body>
+
+</html>
